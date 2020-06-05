@@ -1,0 +1,13 @@
+body {
+  margin: auto;
+  width: 90%;
+}
+
+.info {
+  display: inline;
+  margin: 18px;
+}
+
+h3 {
+  margin: 18px;
+}
