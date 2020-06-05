@@ -11,3 +11,13 @@ body {
 h3 {
   margin: 18px;
 }
+
+input[type=text] {
+  max-width: 200px;
+  display: inline;
+  margin: 18px;
+}
+
+button {
+  display: inline;
+}
