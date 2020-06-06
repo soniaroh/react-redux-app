@@ -8,6 +8,16 @@ body {
   margin: 18px;
 }
 
+.name {
+  display: inline;
+  margin: 18px;
+}
+
+.name:hover {
+  cursor: pointer;
+  background-color: #FFC0CB;
+}
+
 h3 {
   margin: 18px;
 }
