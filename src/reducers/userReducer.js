@@ -16,7 +16,7 @@ const userReducer = (state = initialState, action) => {
       }
       case actions.FETCH_SUCCESS:
       return {
-        users: action.payload.users,
+        users: action.users,
         loading: false,
         error: false
       }

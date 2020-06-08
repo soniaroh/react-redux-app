@@ -2,9 +2,7 @@ import * as actions from './constants';
 
 export const fetchSuccess = users => ({
   type: actions.FETCH_SUCCESS,
-  payload: {
-    users
-  }
+  users
 });
 
 export const fetchError = () => ({

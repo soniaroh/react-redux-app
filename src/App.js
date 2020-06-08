@@ -1,40 +1,51 @@
-import React, {useEffect, useState} from 'react';
+import React from 'react';
 import { fetchUsers} from './actions/actionCreators';
 import { connect } from 'react-redux';
 import User from './components/User';
+import { filterUsers } from './utils'
 
-const App = ({dispatch, users, loading, error}) => {
-  const [searchedTerm, setSearchedTerm] = useState('');
-  const [isFiltering, handleFilter] = useState(false);
-
-  useEffect(() => {
-    dispatch(fetchUsers())
-  }, [dispatch]);
-
-  const handleChange = e => {
-    setSearchedTerm(e.target.value)
+class App extends React.Component {
+  constructor(props){
+    super(props);
+    this.state = {
+      searchedTerm: '',
+      isFiltering: false
+    }
+    this.handleChange = this.handleChange.bind(this);
+    this.handleFilter = this.handleFilter.bind(this);
   }
 
-  const filterUsers = (users, searchedTerm) => {
-    return users.filter(user => user.name.toLowerCase().includes(searchedTerm))
+  componentDidMount(){
+    this.props.fetchUsers()
   }
 
-  let filteredUsers = filterUsers(users, searchedTerm);
+  handleFilter = () => {
+    this.setState({ isFiltering: !this.state.isFiltering})
+  }
+  
+  handleChange = e => {
+    this.setState({searchedTerm: e.target.value})
+  }
 
-  if(loading) return <div>please wait ...</div>
-  if(error) return <div>something unexpected happened, please try again</div>
-  return (
-    <div className="container-fluid">
-      <h3 className="text-info">Users List</h3>
-      <input className="form-control" type="text" placeHolder="Search..." value={searchedTerm} onChange={handleChange}/>
-      <button type="submit" className="btn btn-primary mb-2" onClick={() => {handleFilter(true)}}>Submit</button>
-      {isFiltering && searchedTerm ? 
-      filteredUsers.map(user => <User key={user.id} user={user}/>) 
-      : 
-      users.map(user => <User key={user.id} user={user}/>)
-      }
-    </div>
-  );
+  render() { 
+    const {isFiltering, searchedTerm} = this.state;
+    const {loading, error, users } = this.props;
+    let filteredUsers = filterUsers(users, searchedTerm).sort();
+    if(loading) return <div>please wait ...</div>
+    if(error) return <div>something unexpected happened, please try again</div>
+    return (
+      <div className="container-fluid" data-test="appComponent">
+        <h3 className="text-info">Users List</h3>
+        <input className="form-control" type="text" placeholder="Search..." value={searchedTerm} onChange={this.handleChange}/>
+        <button type="submit" className="btn btn-primary mb-2" onClick={() => {this.handleFilter(true)}}>Submit</button>
+        {isFiltering && searchedTerm ? 
+        filteredUsers.map(user => <User key={user.id} user={user}/>) 
+        : 
+        users.map(user => <User key={user.id} user={user}/>)
+        }
+      </div>
+    );
+  }
 }
 
 const mapStateToProps = state => ({
@@ -43,4 +54,4 @@ const mapStateToProps = state => ({
   error: state.error
 })
 
-export default connect(mapStateToProps)(App);
+export default connect(mapStateToProps, {fetchUsers})(App);
